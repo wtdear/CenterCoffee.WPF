@@ -1,0 +1,145 @@
+<Window x:Class="CenterCoffee.WPF.Windows.StockOperationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="{Binding Title}"
+        Width="480"
+        Height="590"
+        Background="{StaticResource CreamBrush}"
+        FontFamily="{StaticResource AppFont}"
+        Foreground="{StaticResource TextBrush}"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
+    <Grid Margin="26">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="{Binding Title}"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       Foreground="{StaticResource TextBrush}" />
+            <TextBlock Margin="0,5,0,0"
+                       Text="{Binding Subtitle}"
+                       FontSize="13"
+                       Foreground="{StaticResource MutedBrush}"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1"
+                      Margin="0,22,0,0"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,4,0">
+                <Border Padding="16,14"
+                        Background="#FBF8F4"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="11">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CaptionText}" Text="Позиция" />
+                            <TextBlock Margin="0,3,0,0"
+                                       Text="{Binding IngredientName}"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextBrush}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Right">
+                            <TextBlock Style="{StaticResource CaptionText}" Text="На складе" />
+                            <TextBlock Margin="0,3,0,0"
+                                       Text="{Binding CurrentStockText}"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextBrush}"
+                                       HorizontalAlignment="Right" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <TextBlock Margin="0,18,0,6"
+                           Style="{StaticResource FieldLabel}"
+                           Text="Количество" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox AutomationProperties.AutomationId="StockAmount"
+                             Text="{Binding AmountText, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Column="1"
+                               Margin="8,0,0,0"
+                               Text="{Binding UnitText}"
+                               FontSize="13"
+                               Foreground="{StaticResource MutedBrush}"
+                               VerticalAlignment="Center" />
+                </Grid>
+
+                <TextBlock Margin="0,8,0,0"
+                           Text="{Binding PreviewText}"
+                           FontSize="12"
+                           TextWrapping="Wrap">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PreviewIsNegative}" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <TextBlock Margin="0,18,0,6"
+                           Style="{StaticResource FieldLabel}"
+                           Text="Комментарий" />
+                <TextBox Height="76"
+                         Padding="12,9"
+                         AcceptsReturn="True"
+                         AutomationProperties.AutomationId="StockReason"
+                         TextWrapping="Wrap"
+                         VerticalContentAlignment="Top"
+                         Text="{Binding Reason, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Border Margin="0,16,0,0"
+                        Style="{StaticResource ErrorBanner}"
+                        Visibility="{Binding HasError, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               FontSize="12"
+                               Foreground="{StaticResource DangerBrush}"
+                               TextWrapping="Wrap" />
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2"
+                    Margin="0,22,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button Width="110"
+                    Command="{Binding CancelCommand}"
+                    AutomationProperties.AutomationId="StockCancel"
+                    Content="Отмена"
+                    IsCancel="True"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Width="150"
+                    Margin="10,0,0,0"
+                    Command="{Binding SaveCommand}"
+                    AutomationProperties.AutomationId="StockSave"
+                    Content="{Binding SaveButtonText}"
+                    IsDefault="True"
+                    Style="{StaticResource AccentButton}" />
+        </StackPanel>
+    </Grid>
+</Window>

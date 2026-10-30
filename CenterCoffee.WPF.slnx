@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CenterCoffee.Application/CenterCoffee.Application.csproj" Id="d0a1b2c3-0002-4a5b-8c9d-000000000002" />
+    <Project Path="src/CenterCoffee.Domain/CenterCoffee.Domain.csproj" Id="d0a1b2c3-0001-4a5b-8c9d-000000000001" />
+    <Project Path="src/CenterCoffee.Infrastructure/CenterCoffee.Infrastructure.csproj" Id="d0a1b2c3-0003-4a5b-8c9d-000000000003" />
+    <Project Path="src/CenterCoffee.WPF/CenterCoffee.WPF.csproj" Id="522a249a-2afc-4701-9c0e-bede80ecb238" />
+  </Folder>
+</Solution>
