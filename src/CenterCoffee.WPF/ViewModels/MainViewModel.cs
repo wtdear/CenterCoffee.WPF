@@ -11,9 +11,28 @@ namespace CenterCoffee.WPF.ViewModels
     {
         private NavigationItemViewModel _selectedItem;
 
-        public MainViewModel(IWarehouseService warehouseService, IDialogService dialogService)
+        public MainViewModel(
+            IWarehouseService warehouseService,
+            IDataMaintenanceService maintenanceService,
+            IDialogService dialogService)
         {
+            if (warehouseService == null)
+            {
+                throw new ArgumentNullException(nameof(warehouseService));
+            }
+
+            if (maintenanceService == null)
+            {
+                throw new ArgumentNullException(nameof(maintenanceService));
+            }
+
+            if (dialogService == null)
+            {
+                throw new ArgumentNullException(nameof(dialogService));
+            }
+
             var warehousePage = new WarehouseViewModel(warehouseService, dialogService);
+            var integrityPage = new DataIntegrityViewModel(maintenanceService, dialogService);
 
             NavigationItems = new ObservableCollection<NavigationItemViewModel>
             {
@@ -96,7 +115,12 @@ namespace CenterCoffee.WPF.ViewModels
                             "Стоимость и движение запасов",
                             "Экспорт отчётов"
                         }),
-                    true)
+                    true),
+                new NavigationItemViewModel(
+                    "Целостность",
+                    "🛡",
+                    integrityPage,
+                    false)
             };
 
             SelectedItem = NavigationItems[0];

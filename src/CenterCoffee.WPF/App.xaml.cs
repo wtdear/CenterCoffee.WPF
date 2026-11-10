@@ -32,11 +32,35 @@ namespace CenterCoffee.WPF
                 }
 
                 var dataStore = new JsonDataStore(dataFilePath);
+
+                // Состояние файла проверяем до запуска экранов: повреждённая или несовместимая
+                // база не должна выглядеть как пустой склад и не должна перезаписываться.
+                var startupInspection = dataStore.Inspect();
+                if (startupInspection.State == DataFileState.UnsupportedVersion ||
+                    startupInspection.State == DataFileState.Corrupted)
+                {
+                    MessageBox.Show(
+                        startupInspection.State == DataFileState.UnsupportedVersion
+                            ? "Файл данных создан более новой версией программы (версия формата " +
+                              startupInspection.SchemaVersion + ", поддерживается " + DataSchema.Version + ").\n\n" +
+                              "Установите актуальную версию программы. Файл не изменён.\n\n" + dataFilePath
+                            : "Локальный файл данных повреждён или имеет неверный формат.\n\n" +
+                              startupInspection.ErrorMessage + "\n\nПрограмма не будет изменять этот файл. " +
+                              "Восстановите данные из резервной копии, заменив файл вручную.\n\n" + dataFilePath,
+                        "Центр кофе",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+
+                    Shutdown(-1);
+                    return;
+                }
+
                 var unitOfWork = new JsonUnitOfWork(dataStore);
                 var warehouseService = new WarehouseService(unitOfWork);
+                var maintenanceService = new JsonDataMaintenanceService(dataStore, unitOfWork.Reload);
                 var dialogService = new DialogService();
 
-                var mainViewModel = new MainViewModel(warehouseService, dialogService);
+                var mainViewModel = new MainViewModel(warehouseService, maintenanceService, dialogService);
                 var window = new MainWindow
                 {
                     DataContext = mainViewModel
