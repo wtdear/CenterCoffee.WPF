@@ -22,7 +22,7 @@ namespace CenterCoffee.Infrastructure.Persistence
 
         public AppData()
         {
-            SchemaVersion = 1;
+            SchemaVersion = DataSchema.Version;
             Ingredients = new List<Ingredient>();
             Movements = new List<StockMovement>();
         }
@@ -38,6 +38,18 @@ namespace CenterCoffee.Infrastructure.Persistence
             {
                 Movements = new List<StockMovement>();
             }
+        }
+
+        /// <summary>
+        /// Вызывается сериализатором до заполнения полей. Без этого метода новый экземпляр
+        /// получал бы текущую версию из конструктора, и файл без поля <c>schemaVersion</c>
+        /// выглядел бы как текущий формат. Здесь версия считается неизвестной (0), пока
+        /// файл не сообщит иное.
+        /// </summary>
+        [OnDeserializing]
+        private void OnDeserializing(StreamingContext context)
+        {
+            SchemaVersion = 0;
         }
     }
 }

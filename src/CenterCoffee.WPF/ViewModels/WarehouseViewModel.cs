@@ -21,6 +21,7 @@ namespace CenterCoffee.WPF.ViewModels
         private WarehouseSummary _summary = new WarehouseSummary(0, 0, 0, 0);
         private bool _showAllMovements;
         private bool _hasMovements;
+        private string _blockedMessage;
 
         public WarehouseViewModel(IWarehouseService warehouse, IDialogService dialogs)
         {
@@ -31,13 +32,45 @@ namespace CenterCoffee.WPF.ViewModels
             Movements = new ObservableCollection<MovementRowViewModel>();
 
             RefreshCommand = new RelayCommand(Refresh);
-            AddIngredientCommand = new RelayCommand(AddIngredient);
-            EditIngredientCommand = new RelayCommand(EditIngredient, () => HasSelection);
-            ReceiveStockCommand = new RelayCommand(ReceiveStock, () => HasSelection);
-            WriteOffStockCommand = new RelayCommand(WriteOffStock, () => HasSelection);
+            AddIngredientCommand = new RelayCommand(AddIngredient, () => !IsBlocked);
+            EditIngredientCommand = new RelayCommand(EditIngredient, () => HasSelection && !IsBlocked);
+            ReceiveStockCommand = new RelayCommand(ReceiveStock, () => HasSelection && !IsBlocked);
+            WriteOffStockCommand = new RelayCommand(WriteOffStock, () => HasSelection && !IsBlocked);
+
+            // После восстановления из резервной копии данные в памяти заменяются, поэтому
+            // экран обязан перечитать список, а не жить на ссылках на старые объекты.
+            DataChangedNotifier.DataReplaced += OnDataReplaced;
+            DataChangedNotifier.DataBlocked += OnDataBlocked;
 
             Title = "Склад";
             Subtitle = "Остатки, приход и списание";
+        }
+
+        private void OnDataReplaced(object sender, EventArgs e)
+        {
+            Refresh();
+        }
+
+        private void OnDataBlocked(object sender, EventArgs e)
+        {
+            _blockedMessage =
+                "Данные были заменены восстановленной копией, но не перечитались. " +
+                "Сохранять что-либо сейчас нельзя — закройте и снова откройте программу.";
+
+            Ingredients.Clear();
+            Movements.Clear();
+            SelectedIngredient = null;
+            Summary = new WarehouseSummary(0, 0, 0, 0);
+            HasMovements = false;
+            OnPropertyChanged(nameof(IsBlocked));
+            OnPropertyChanged(nameof(IsEmpty));
+            OnPropertyChanged(nameof(EmptyStateText));
+            RaiseSelectionCommands();
+        }
+
+        public bool IsBlocked
+        {
+            get { return !string.IsNullOrEmpty(_blockedMessage); }
         }
 
         public ObservableCollection<IngredientRowViewModel> Ingredients { get; private set; }
@@ -105,6 +138,11 @@ namespace CenterCoffee.WPF.ViewModels
         {
             get
             {
+                if (IsBlocked)
+                {
+                    return _blockedMessage;
+                }
+
                 if (LowStockOnly || !string.IsNullOrWhiteSpace(SearchText))
                 {
                     return "По заданным условиям ничего не найдено.";
@@ -163,6 +201,11 @@ namespace CenterCoffee.WPF.ViewModels
 
         private void Refresh()
         {
+            if (IsBlocked)
+            {
+                return;
+            }
+
             ReloadIngredients();
         }
 

@@ -1,0 +1,134 @@
+<Window x:Class="CenterCoffee.WPF.Windows.BackupFolderPicker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Папка для резервной копии"
+        Width="640"
+        Height="560"
+        Background="{StaticResource CreamBrush}"
+        FontFamily="{StaticResource AppFont}"
+        Foreground="{StaticResource TextBrush}"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize"
+        ShowInTaskbar="False">
+    <Grid Margin="26">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Папка для резервной копии"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       Foreground="{StaticResource TextBrush}" />
+            <TextBlock Margin="0,5,0,0"
+                       Text="Резервная копия сохраняется отдельным файлом. Выберите папку, которую потом легко найти."
+                       FontSize="13"
+                       Foreground="{StaticResource MutedBrush}"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="0,18,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border Padding="12,8"
+                    Background="{StaticResource MilkBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="9">
+                <TextBlock x:Name="CurrentPathText"
+                           FontSize="12"
+                           Foreground="{StaticResource TextBrush}"
+                           TextTrimming="CharacterEllipsis" />
+            </Border>
+            <Button Grid.Column="1"
+                    Margin="8,0,0,0"
+                    AutomationProperties.AutomationId="BackupFolderUp"
+                    Click="OnUpClick"
+                    Content="↑ Вверх"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Grid.Column="2"
+                    Margin="8,0,0,0"
+                    AutomationProperties.AutomationId="BackupFolderRefresh"
+                    Click="OnRefreshClick"
+                    Content="Обновить"
+                    Style="{StaticResource SecondaryButton}" />
+        </Grid>
+
+        <StackPanel Grid.Row="2"
+                    Margin="0,10,0,0"
+                    Orientation="Horizontal">
+            <StackPanel x:Name="PathParts"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center" />
+        </StackPanel>
+
+        <ListBox x:Name="FolderList"
+                 Grid.Row="3"
+                 Margin="0,12,0,0"
+                 AutomationProperties.AutomationId="BackupFolderList"
+                 Background="{StaticResource SurfaceBrush}"
+                 BorderBrush="{StaticResource BorderBrush}"
+                 BorderThickness="1"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 MouseDoubleClick="OnFolderDoubleClick">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="4">
+                        <TextBlock Text="📁" Margin="0,0,8,0" />
+                        <TextBlock Text="{Binding Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Grid Grid.Row="4" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="NewFolderName"
+                         Width="200"
+                         AutomationProperties.AutomationId="BackupFolderNewName"
+                         ToolTip="Имя новой папки" />
+                <Button Margin="8,0,0,0"
+                        AutomationProperties.AutomationId="BackupFolderCreate"
+                        Click="OnCreateClick"
+                        Content="Создать папку"
+                        Style="{StaticResource SecondaryButton}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Width="110"
+                        AutomationProperties.AutomationId="BackupFolderCancel"
+                        Click="OnCancelClick"
+                        Content="Отмена"
+                        IsCancel="True"
+                        Style="{StaticResource SecondaryButton}" />
+                <Button Width="160"
+                        Margin="10,0,0,0"
+                        AutomationProperties.AutomationId="BackupFolderSelect"
+                        Click="OnSelectClick"
+                        Content="Выбрать папку"
+                        IsDefault="True"
+                        Style="{StaticResource AccentButton}" />
+            </StackPanel>
+        </Grid>
+
+        <TextBlock x:Name="StatusText"
+                   Grid.Row="4"
+                   Margin="0,60,0,0"
+                   FontSize="11"
+                   Foreground="{StaticResource DangerBrush}"
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Top"
+                   Visibility="Collapsed" />
+    </Grid>
+</Window>
