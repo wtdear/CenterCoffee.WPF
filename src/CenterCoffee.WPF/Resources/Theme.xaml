@@ -12,7 +12,7 @@
     <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="MilkBrush" Color="#FFFDFB" />
     <SolidColorBrush x:Key="TextBrush" Color="#2D211A" />
-    <SolidColorBrush x:Key="MutedBrush" Color="#8A7A6D" />
+    <SolidColorBrush x:Key="MutedBrush" Color="#6E5E52" />
     <SolidColorBrush x:Key="BorderBrush" Color="#E8DED3" />
     <SolidColorBrush x:Key="SuccessBrush" Color="#3F7D58" />
     <SolidColorBrush x:Key="SuccessSoftBrush" Color="#E7F3EC" />
@@ -21,7 +21,7 @@
     <SolidColorBrush x:Key="DangerBrush" Color="#B5453C" />
     <SolidColorBrush x:Key="DangerSoftBrush" Color="#FBEAE8" />
     <SolidColorBrush x:Key="SidebarTextBrush" Color="#F3E7DA" />
-    <SolidColorBrush x:Key="SidebarMutedBrush" Color="#BFA894" />
+    <SolidColorBrush x:Key="SidebarMutedBrush" Color="#CBB5A2" />
 
     <FontFamily x:Key="AppFont">Segoe UI</FontFamily>
 
@@ -39,10 +39,10 @@
     </Style>
 
     <Style x:Key="KpiValue" TargetType="{x:Type TextBlock}">
-        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontSize" Value="26" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-        <Setter Property="Margin" Value="0,8,0,0" />
+        <Setter Property="Margin" Value="0,6,0,0" />
     </Style>
 
     <Style x:Key="SectionTitle" TargetType="{x:Type TextBlock}">
@@ -277,8 +277,8 @@
         <Setter Property="HeadersVisibility" Value="Column" />
         <Setter Property="GridLinesVisibility" Value="Horizontal" />
         <Setter Property="HorizontalGridLinesBrush" Value="#F1EAE2" />
-        <Setter Property="RowHeight" Value="52" />
-        <Setter Property="ColumnHeaderHeight" Value="42" />
+        <Setter Property="RowHeight" Value="46" />
+        <Setter Property="ColumnHeaderHeight" Value="38" />
         <Setter Property="RowBackground" Value="Transparent" />
         <Setter Property="AlternatingRowBackground" Value="#FCFAF7" />
         <Setter Property="SelectionMode" Value="Single" />
@@ -292,8 +292,9 @@
     </Style>
 
     <!-- Навигация -->
-    <Style x:Key="NavItemStyle" TargetType="{x:Type ListBoxItem}">        <Setter Property="Margin" Value="12,2" />
-        <Setter Property="Padding" Value="14,11" />
+    <Style x:Key="NavItemStyle" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Margin" Value="10,2" />
+        <Setter Property="Padding" Value="12,9" />
         <Setter Property="Foreground" Value="{StaticResource SidebarTextBrush}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Template">

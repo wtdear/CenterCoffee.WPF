@@ -6,20 +6,21 @@
         xmlns:vm="clr-namespace:CenterCoffee.WPF.ViewModels"
         mc:Ignorable="d"
         Title="Центр кофе — панель управления"
-        Width="1440"
-        Height="900"
-        MinWidth="1280"
-        MinHeight="720"
+        Width="1180"
+        Height="760"
+        MinWidth="1120"
+        MinHeight="700"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource CreamBrush}"
         FontFamily="{StaticResource AppFont}"
         Foreground="{StaticResource TextBrush}"
         TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
         UseLayoutRounding="True">
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="270" />
+            <ColumnDefinition Width="224" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -33,37 +34,37 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Margin="24,26,24,20">
+                <StackPanel Margin="18,18,18,14">
                     <StackPanel Orientation="Horizontal">
-                        <Border Width="48"
-                                Height="48"
+                        <Border Width="40"
+                                Height="40"
                                 Background="#26C98B5E"
-                                CornerRadius="14">
+                                CornerRadius="12">
                             <TextBlock Text="☕"
-                                       FontSize="24"
+                                       FontSize="20"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center" />
                         </Border>
-                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
                             <TextBlock Text="ЦЕНТР КОФЕ"
                                        Foreground="{StaticResource SidebarTextBrush}"
-                                       FontSize="15"
+                                       FontSize="14"
                                        FontWeight="Bold" />
                             <TextBlock Text="ИП Миргородский"
-                                       Margin="0,3,0,0"
+                                       Margin="0,2,0,0"
                                        Foreground="{StaticResource SidebarMutedBrush}"
-                                       FontSize="11" />
+                                       FontSize="10" />
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
 
                 <Border Grid.Row="1"
                         Height="1"
-                        Margin="24,0"
+                        Margin="18,0"
                         Background="#1FFFFFFF" />
 
                 <StackPanel Grid.Row="2">
-                    <TextBlock Margin="26,22,0,8"
+                    <TextBlock Margin="20,16,0,6"
                                Foreground="{StaticResource SidebarMutedBrush}"
                                FontSize="10"
                                FontWeight="SemiBold"
@@ -101,7 +102,7 @@
                                             Visibility="{Binding IsInDevelopment, Converter={StaticResource BoolToVisibility}}">
                                         <TextBlock Text="скоро"
                                                    Foreground="#F0C7A2"
-                                                   FontSize="9"
+                                                   FontSize="10"
                                                    FontWeight="SemiBold" />
                                     </Border>
                                 </Grid>
@@ -111,41 +112,41 @@
                 </StackPanel>
 
                 <Border Grid.Row="3"
-                        Margin="16,0,16,18"
-                        Padding="14,12"
+                        Margin="12,0,12,12"
+                        Padding="12,10"
                         Background="#12FFFFFF"
-                        CornerRadius="12">
+                        CornerRadius="10">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Border Width="34"
-                                    Height="34"
+                            <Border Width="30"
+                                    Height="30"
                                     Background="{StaticResource CaramelBrush}"
-                                    CornerRadius="17">
+                                    CornerRadius="15">
                                 <TextBlock Text="ИП"
                                            Foreground="White"
-                                           FontSize="11"
+                                           FontSize="10"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
                             </Border>
-                            <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                            <StackPanel Margin="9,0,0,0" VerticalAlignment="Center">
                                 <TextBlock Text="ИП Миргородский"
                                            Foreground="{StaticResource SidebarTextBrush}"
-                                           FontSize="12"
+                                           FontSize="11"
                                            FontWeight="SemiBold" />
                                 <TextBlock Text="Кофейня «Центр кофе»"
-                                           Margin="0,2,0,0"
+                                           Margin="0,1,0,0"
                                            Foreground="{StaticResource SidebarMutedBrush}"
                                            FontSize="10" />
                             </StackPanel>
                         </StackPanel>
 
-                        <Grid Margin="0,12,0,0">
+                        <Grid Margin="0,9,0,0">
                             <TextBlock Text="Локальное хранилище"
                                        Foreground="{StaticResource SidebarMutedBrush}"
                                        FontSize="10" />
                             <TextBlock Text="{Binding VersionText}"
-                                       Foreground="#7F6B5B"
+                                       Foreground="{StaticResource SidebarMutedBrush}"
                                        FontSize="10"
                                        HorizontalAlignment="Right" />
                         </Grid>
@@ -161,7 +162,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="34,26,34,18">
+            <Grid Grid.Row="0" Margin="24,18,24,14">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -169,41 +170,41 @@
 
                 <StackPanel>
                     <TextBlock Text="{Binding CurrentPage.Title}"
-                               FontSize="26"
+                               FontSize="22"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource TextBrush}" />
                     <TextBlock Text="{Binding CurrentPage.Subtitle}"
-                               Margin="0,5,0,0"
-                               FontSize="13"
+                               Margin="0,4,0,0"
+                               FontSize="12"
                                Foreground="{StaticResource MutedBrush}" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1"
                             Orientation="Horizontal"
                             VerticalAlignment="Center">
-                    <Border Margin="0,0,10,0"
-                            Padding="12,8"
+                    <Border Margin="0,0,8,0"
+                            Padding="10,6"
                             Background="{StaticResource SurfaceBrush}"
                             BorderBrush="{StaticResource BorderBrush}"
                             BorderThickness="1"
-                            CornerRadius="10">
+                            CornerRadius="9">
                         <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="8"
-                                     Height="8"
+                            <Ellipse Width="7"
+                                     Height="7"
                                      Fill="{StaticResource SuccessBrush}"
                                      VerticalAlignment="Center" />
-                            <TextBlock Margin="8,0,0,0"
+                            <TextBlock Margin="7,0,0,0"
                                        Text="{Binding StorageLabel}"
                                        FontSize="11"
                                        Foreground="{StaticResource MutedBrush}" />
                         </StackPanel>
                     </Border>
 
-                    <Border Padding="12,8"
+                    <Border Padding="10,6"
                             Background="{StaticResource SurfaceBrush}"
                             BorderBrush="{StaticResource BorderBrush}"
                             BorderThickness="1"
-                            CornerRadius="10">
+                            CornerRadius="9">
                         <TextBlock Text="{Binding TodayText}"
                                    FontSize="11"
                                    Foreground="{StaticResource MutedBrush}" />
@@ -212,7 +213,7 @@
             </Grid>
 
             <ContentControl Grid.Row="1"
-                            Margin="34,0,34,30"
+                            Margin="24,0,24,20"
                             Content="{Binding CurrentPage}"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch" />
