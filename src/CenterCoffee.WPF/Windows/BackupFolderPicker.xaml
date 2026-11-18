@@ -101,12 +101,12 @@
                 <Button Margin="8,0,0,0"
                         AutomationProperties.AutomationId="BackupFolderCreate"
                         Click="OnCreateClick"
-                        Content="Создать папку"
-                        Style="{StaticResource SecondaryButton}" />
+                        Content="Создать"
+                        Style="{StaticResource SecondaryButton}" Width="100" />
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <Button Width="110"
+                <Button Width="100"
                         AutomationProperties.AutomationId="BackupFolderCancel"
                         Click="OnCancelClick"
                         Content="Отмена"
