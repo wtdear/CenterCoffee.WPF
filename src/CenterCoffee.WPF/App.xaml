@@ -18,6 +18,10 @@
                 <views:DataIntegrityView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:WarehouseReportsViewModel}">
+                <views:WarehouseReportsView />
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type vm:ComingSoonViewModel}">
                 <views:ComingSoonView />
             </DataTemplate>

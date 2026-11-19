@@ -13,12 +13,30 @@ namespace CenterCoffee.WPF.ViewModels
 
         public MainViewModel(
             IWarehouseService warehouseService,
+            IWarehouseReportService reportService,
+            IWarehouseReportExporter reportExporter,
+            IReportExportWriter reportExportWriter,
             IDataMaintenanceService maintenanceService,
             IDialogService dialogService)
         {
             if (warehouseService == null)
             {
                 throw new ArgumentNullException(nameof(warehouseService));
+            }
+
+            if (reportService == null)
+            {
+                throw new ArgumentNullException(nameof(reportService));
+            }
+
+            if (reportExporter == null)
+            {
+                throw new ArgumentNullException(nameof(reportExporter));
+            }
+
+            if (reportExportWriter == null)
+            {
+                throw new ArgumentNullException(nameof(reportExportWriter));
             }
 
             if (maintenanceService == null)
@@ -32,6 +50,11 @@ namespace CenterCoffee.WPF.ViewModels
             }
 
             var warehousePage = new WarehouseViewModel(warehouseService, dialogService);
+            var reportsPage = new WarehouseReportsViewModel(
+                reportService,
+                reportExporter,
+                reportExportWriter,
+                dialogService);
             var integrityPage = new DataIntegrityViewModel(maintenanceService, dialogService);
 
             NavigationItems = new ObservableCollection<NavigationItemViewModel>
@@ -104,18 +127,8 @@ namespace CenterCoffee.WPF.ViewModels
                 new NavigationItemViewModel(
                     "Отчёты",
                     "📊",
-                    CreateComingSoon(
-                        "Отчёты",
-                        "📊",
-                        "Аналитика продаж и движения складских запасов.",
-                        new[]
-                        {
-                            "Выручка и количество чеков за период",
-                            "Средний чек и популярные позиции",
-                            "Стоимость и движение запасов",
-                            "Экспорт отчётов"
-                        }),
-                    true),
+                    reportsPage,
+                    false),
                 new NavigationItemViewModel(
                     "Целостность",
                     "🛡",

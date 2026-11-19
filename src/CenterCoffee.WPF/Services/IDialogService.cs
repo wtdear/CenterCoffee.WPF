@@ -19,5 +19,11 @@ namespace CenterCoffee.WPF.Services
 
         /// <summary>Выбор файла резервной копии для восстановления. Возвращает null при отказе.</summary>
         string PickBackupFile(string initialDirectory);
+
+        /// <summary>
+        /// Выбор пути для сохранения выгрузки отчёта. Возвращает полный путь
+        /// и имя выбранного файла или null при отказе.
+        /// </summary>
+        string PickReportExportFile(string suggestedFileName, string initialDirectory);
     }
 }

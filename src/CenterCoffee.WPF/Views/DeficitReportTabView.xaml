@@ -1,0 +1,151 @@
+<UserControl x:Class="CenterCoffee.WPF.Views.DeficitReportTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             FontFamily="{StaticResource AppFont}">
+    <Border Style="{StaticResource CardBorder}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Margin="16,12,16,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="Позиции ниже минимума" />
+                        <TextBlock Margin="8,2,0,0"
+                                   Style="{StaticResource CaptionText}"
+                                   Text="{Binding Items.Count, StringFormat={}{0} поз.}" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1"
+                               MaxWidth="340"
+                               Margin="12,0,0,0"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource CaptionText}"
+                               Text="Количество — сколько докупить до минимального остатка."
+                               TextAlignment="Right"
+                               TextWrapping="Wrap" />
+                </Grid>
+
+            <DataGrid Grid.Row="1"
+                      AutomationProperties.AutomationId="ReportDeficitGrid"
+                      ItemsSource="{Binding Items}"
+                      Style="{StaticResource AppDataGrid}"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="*"
+                                            Header="Наименование"
+                                            SortMemberPath="Name">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Border Width="8"
+                                            Height="8"
+                                            Margin="0,0,10,0"
+                                            Background="{Binding StatusBrush}"
+                                            CornerRadius="4" />
+                                    <TextBlock Text="{Binding Name}"
+                                               FontWeight="SemiBold"
+                                               TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Width="46"
+                                        Binding="{Binding UnitText}"
+                                        Header="Ед.">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Width="80"
+                                        Binding="{Binding StockText}"
+                                        Header="Остаток">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Width="80"
+                                        Binding="{Binding MinStockText}"
+                                        Header="Минимум">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Width="132"
+                                        Binding="{Binding RecommendedAmountText}"
+                                        Header="Докупить">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="Foreground" Value="{StaticResource WarningBrush}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTemplateColumn Width="112" Header="Статус">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding StatusBrush}"
+                                        Style="{StaticResource StatusPill}">
+                                    <TextBlock Text="{Binding StatusText}"
+                                               Foreground="White"
+                                               FontSize="11"
+                                               FontWeight="SemiBold" />
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Row="1"
+                    Background="{StaticResource SurfaceBrush}"
+                    Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock MaxWidth="360"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{Binding EmptyText}"
+                           FontSize="13"
+                           Foreground="{StaticResource MutedBrush}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap" />
+            </Border>
+
+            <Border Grid.Row="2"
+                    Padding="16,10"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource CaptionText}" Text="Оценка стоимости докупки:" />
+                    <TextBlock Margin="6,0,0,0"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Text="{Binding TotalPurchaseCost, Converter={StaticResource CurrencyConverter}}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

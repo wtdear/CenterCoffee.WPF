@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Markup;
 using CenterCoffee.Application.Services;
+using CenterCoffee.Infrastructure.Files;
 using CenterCoffee.Infrastructure.Persistence;
 using CenterCoffee.WPF.Services;
 using CenterCoffee.WPF.ViewModels;
@@ -57,10 +58,19 @@ namespace CenterCoffee.WPF
 
                 var unitOfWork = new JsonUnitOfWork(dataStore);
                 var warehouseService = new WarehouseService(unitOfWork);
+                var reportService = new WarehouseReportService(unitOfWork);
+                var reportExporter = new WarehouseReportCsvExporter();
+                var reportExportWriter = new TextReportExportWriter();
                 var maintenanceService = new JsonDataMaintenanceService(dataStore, unitOfWork.Reload);
                 var dialogService = new DialogService();
 
-                var mainViewModel = new MainViewModel(warehouseService, maintenanceService, dialogService);
+                var mainViewModel = new MainViewModel(
+                    warehouseService,
+                    reportService,
+                    reportExporter,
+                    reportExportWriter,
+                    maintenanceService,
+                    dialogService);
                 var window = new MainWindow
                 {
                     DataContext = mainViewModel
