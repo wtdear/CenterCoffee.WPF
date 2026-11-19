@@ -26,6 +26,11 @@ namespace CenterCoffee.WPF.ViewModels
 
         public bool IsInitial => _movement.Type == StockMovementType.Initial;
 
+        public string IngredientNameText
+        {
+            get { return _movement.IngredientName; }
+        }
+
         public string TypeText
         {
             get

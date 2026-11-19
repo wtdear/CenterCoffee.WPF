@@ -82,6 +82,22 @@ namespace CenterCoffee.WPF.Services
             return dialog.ShowDialog(GetOwner()) == true ? dialog.FileName : null;
         }
 
+        public string PickReportExportFile(string suggestedFileName, string initialDirectory)
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = "Сохранить отчёт",
+                Filter = "Файл CSV, совместимый с Excel (*.csv)|*.csv|Все файлы (*.*)|*.*",
+                AddExtension = true,
+                DefaultExt = ".csv",
+                OverwritePrompt = true,
+                FileName = string.IsNullOrWhiteSpace(suggestedFileName) ? "otchet.csv" : suggestedFileName,
+                InitialDirectory = ResolveInitialDirectory(initialDirectory)
+            };
+
+            return dialog.ShowDialog(GetOwner()) == true ? dialog.FileName : null;
+        }
+
         private bool ShowDialog(Window window)
         {
             window.Owner = GetOwner();

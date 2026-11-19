@@ -1,0 +1,123 @@
+<UserControl x:Class="CenterCoffee.WPF.Views.TurnoverReportTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             FontFamily="{StaticResource AppFont}">
+    <Border Style="{StaticResource CardBorder}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Margin="16,12,16,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="Обороты за период" />
+                        <TextBlock Margin="8,2,0,0"
+                                   Style="{StaticResource CaptionText}"
+                                   Text="{Binding SummaryText}" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1"
+                               Margin="12,0,0,0"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource CaptionText}"
+                               Text="{Binding PeriodText}" />
+                </Grid>
+
+            <DataGrid Grid.Row="1"
+                      AutomationProperties.AutomationId="ReportTurnoverGrid"
+                      ItemsSource="{Binding Items}"
+                      Style="{StaticResource AppDataGrid}"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="*"
+                                        Binding="{Binding Name}"
+                                        Header="Наименование"
+                                        SortMemberPath="Name">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Width="46"
+                                        Binding="{Binding UnitText}"
+                                        Header="Ед.">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Width="110"
+                                        Binding="{Binding OpeningStockText}"
+                                        Header="На начало">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Width="92"
+                                        Binding="{Binding ReceivedText}"
+                                        Header="Приход">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Width="92"
+                                        Binding="{Binding WrittenOffText}"
+                                        Header="Списание">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Width="112"
+                                        Binding="{Binding ClosingStockText}"
+                                        Header="На конец">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Row="1"
+                    Background="{StaticResource SurfaceBrush}"
+                    Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock MaxWidth="360"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{Binding EmptyText}"
+                           FontSize="13"
+                           Foreground="{StaticResource MutedBrush}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap" />
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>
