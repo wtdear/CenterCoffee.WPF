@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="Центр кофе"
+           Manufacturer="ИП Миргородский"
+           Version="$(var.Version)"
+           UpgradeCode="8F4C1A62-3B7D-4E90-A5C1-2D7E6B9013AA"
+           Scope="perMachine"
+           Codepage="1251"
+           Compressed="yes">
+
+    <!-- Повторная установка той же линейки заменяет предыдущую версию. -->
+    <MajorUpgrade DowngradeErrorMessage="На компьютере уже установлена более новая версия «Центр кофе»." />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Папка установки. Мастер разрешает пользователю выбрать другую папку. -->
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="CenterCoffee" />
+    </StandardDirectory>
+
+    <!-- Ярлык в меню «Пуск». -->
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Центр кофе" />
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="Приложение «Центр кофе»" Level="1">
+      <ComponentGroupRef Id="ApplicationFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+
+    <!-- Приветствие, выбор папки, прогресс, завершение. -->
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+  </Package>
+
+  <Fragment>
+    <!-- Состав поставки: exe, три библиотеки слоёв и файл конфигурации. -->
+    <ComponentGroup Id="ApplicationFiles" Directory="INSTALLFOLDER">
+      <!-- Ярлык «Пуск» ссылается на exe из другого компонента; при perMachine-установке
+           ярлык живёт в общем AllUsers-меню, а ключ реестра — в HKLM, чтобы ICE57
+           не видел смеси пользовательских и машинных данных. -->
+      <Component Id="ApplicationExecutable" Guid="*">
+        <File Id="CenterCoffeeExe"
+              Source="$(var.SourceDir)CenterCoffee.WPF.exe"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="ApplicationConfig" Guid="*">
+        <File Id="CenterCoffeeExeConfig"
+              Source="$(var.SourceDir)CenterCoffee.WPF.exe.config"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="DomainAssembly" Guid="*">
+        <File Id="CenterCoffeeDomainDll"
+              Source="$(var.SourceDir)CenterCoffee.Domain.dll"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="ApplicationAssembly" Guid="*">
+        <File Id="CenterCoffeeApplicationDll"
+              Source="$(var.SourceDir)CenterCoffee.Application.dll"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="InfrastructureAssembly" Guid="*">
+        <File Id="CenterCoffeeInfrastructureDll"
+              Source="$(var.SourceDir)CenterCoffee.Infrastructure.dll"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Ярлык «Пуск» в общей папке меню. KeyPath — ключ в HKCU, как требуют
+         ICE43/ICE57 для не-advertised ярлыков. ICE69 о ссылке на файл другого
+         компонента подавлен: это известный допустимый шум для такой схемы. -->
+    <Component Id="StartMenuShortcut" Directory="ApplicationProgramsFolder" Guid="*">
+      <Shortcut Id="ApplicationStartMenuShortcut"
+                Name="Центр кофе"
+                Description="Учётное приложение кофейни «Центр кофе»"
+                Target="[INSTALLFOLDER]CenterCoffee.WPF.exe"
+                WorkingDirectory="INSTALLFOLDER" />
+      <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
+      <RegistryValue Root="HKCU" Key="Software\CenterCoffee\Installer"
+                     Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+  </Fragment>
+</Wix>

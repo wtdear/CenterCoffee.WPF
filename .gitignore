@@ -23,3 +23,9 @@
 data.json
 *.tmp
 TestResults/
+
+# Пакет релиза
+dist/
+
+# Копия запускаемого набора в корне решения (создаёт tools\package-release.ps1)
+/CenterCoffee.WPF.exe.config

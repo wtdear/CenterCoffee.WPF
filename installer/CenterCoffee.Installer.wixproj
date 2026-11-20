@@ -1,0 +1,21 @@
+<Project Sdk="WixToolset.Sdk/6.0.1">
+  <!--
+    Установщик «Центр кофе» (WiX Toolset v6, SDK-проект).
+    Обычная сборка: powershell -ExecutionPolicy Bypass -File tools\package-release.ps1
+    Скрипт собирает приложение, передаёт SourceDir и Version и меняет выходную папку на dist\.
+  -->
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <OutputName>CenterCoffee.Setup</OutputName>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <SuppressIces>WixUIExtension</SuppressIces>
+    <!-- Обоих значений достаточно: SourceDir по умолчанию указывает на Release-сборку рядом. -->
+    <Version Condition=" '$(Version)' == '' ">1.0.0</Version>
+    <SourceDir Condition=" '$(SourceDir)' == '' ">$(MSBuildThisFileDirectory)..\src\CenterCoffee.WPF\bin\Release\</SourceDir>
+    <DefineConstants>Version=$(Version);SourceDir=$(SourceDir)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="6.0.1" />
+  </ItemGroup>
+</Project>
