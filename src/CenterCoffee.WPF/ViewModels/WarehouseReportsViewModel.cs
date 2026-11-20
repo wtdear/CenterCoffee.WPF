@@ -90,8 +90,8 @@ namespace CenterCoffee.WPF.ViewModels
         /// <summary>Только чтение данных, без обращения к UI, для выгрузки в файл.</summary>
         internal abstract object BuildSnapshot();
 
-        /// <summary>Текстовое представление отчёта, сформированного заново.</summary>
-        internal abstract string BuildCsv(IWarehouseReportExporter exporter);
+        /// <summary>Табличное представление отчёта, сформированного заново.</summary>
+        internal abstract ReportTable BuildTable(IWarehouseReportExporter exporter);
 
         internal abstract void Apply(object snapshot);
 
@@ -151,7 +151,7 @@ namespace CenterCoffee.WPF.ViewModels
 
     /// <summary>
     /// Экран отчётов. Вкладки только отображают готовые показатели: все расчёты
-    /// выполняет сервис отчётов, а выгрузка — экспортёр CSV.
+    /// выполняет сервис отчётов, а выгрузка — экспортёр отчётов и запись файла.
     /// </summary>
     public sealed class WarehouseReportsViewModel : ViewModelBase
     {
@@ -416,10 +416,14 @@ namespace CenterCoffee.WPF.ViewModels
                 return;
             }
 
-            string content;
+            // Диалог не добавляет расширение, если выбран фильтр «Все файлы»:
+            // дописываем формат сами, иначе Excel откроет файл как неизвестный.
+            targetPath = EnsureReportExtension(targetPath, _exporter.GetFileExtension());
+
+            ReportTable table;
             try
             {
-                content = tab.BuildCsv(_exporter);
+                table = tab.BuildTable(_exporter);
             }
             catch (DomainException exception)
             {
@@ -436,13 +440,15 @@ namespace CenterCoffee.WPF.ViewModels
             IsBusy = true;
             try
             {
-                savedPath = _writer.WriteTextFile(targetPath, content);
+                savedPath = _writer.Write(table, targetPath);
             }
             catch (Exception exception) when (
                 exception is IOException ||
                 exception is UnauthorizedAccessException ||
                 exception is ArgumentException ||
-                exception is NotSupportedException)
+                exception is NotSupportedException ||
+                exception is InvalidDataException ||
+                exception is System.Xml.XmlException)
             {
                 IsBusy = false;
                 ShowStatus("Не удалось сохранить отчёт: " + exception.Message, true);
@@ -472,6 +478,30 @@ namespace CenterCoffee.WPF.ViewModels
             {
                 return string.Empty;
             }
+        }
+
+        /// <summary>
+        /// Дописывает расширение отчёта, если пользователь не указал его при выборе
+        /// фильтра «Все файлы». Сравнение без учёта регистра и без параметров
+        /// расширения, чтобы не менять имя, уже содержащее нужный формат.
+        /// </summary>
+        private static string EnsureReportExtension(string path, string extension)
+        {
+            if (string.IsNullOrWhiteSpace(extension))
+            {
+                return path;
+            }
+
+            var normalizedExtension = extension.StartsWith(".", StringComparison.Ordinal)
+                ? extension
+                : "." + extension;
+
+            if (path.EndsWith(normalizedExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                return path;
+            }
+
+            return path + normalizedExtension;
         }
 
         private void ShowStatus(string message, bool isError)
@@ -729,7 +759,7 @@ namespace CenterCoffee.WPF.ViewModels
             return ReportService.GetStockReport();
         }
 
-        internal override string BuildCsv(IWarehouseReportExporter exporter)
+        internal override ReportTable BuildTable(IWarehouseReportExporter exporter)
         {
             return exporter.BuildStockReport((StockReport)BuildSnapshot());
         }
@@ -810,7 +840,7 @@ namespace CenterCoffee.WPF.ViewModels
             return ReportService.GetTurnoverReport(PeriodFrom, PeriodTo);
         }
 
-        internal override string BuildCsv(IWarehouseReportExporter exporter)
+        internal override ReportTable BuildTable(IWarehouseReportExporter exporter)
         {
             return exporter.BuildTurnoverReport((TurnoverReport)BuildSnapshot());
         }
@@ -883,7 +913,7 @@ namespace CenterCoffee.WPF.ViewModels
             return ReportService.GetDeficitReport();
         }
 
-        internal override string BuildCsv(IWarehouseReportExporter exporter)
+        internal override ReportTable BuildTable(IWarehouseReportExporter exporter)
         {
             return exporter.BuildDeficitReport((DeficitReport)BuildSnapshot());
         }
@@ -965,7 +995,7 @@ namespace CenterCoffee.WPF.ViewModels
             return ReportService.GetMovementReport(PeriodFrom, PeriodTo);
         }
 
-        internal override string BuildCsv(IWarehouseReportExporter exporter)
+        internal override ReportTable BuildTable(IWarehouseReportExporter exporter)
         {
             return exporter.BuildMovementReport((MovementReport)BuildSnapshot());
         }

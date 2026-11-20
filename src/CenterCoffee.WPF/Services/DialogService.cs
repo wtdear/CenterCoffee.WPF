@@ -87,11 +87,11 @@ namespace CenterCoffee.WPF.Services
             var dialog = new Microsoft.Win32.SaveFileDialog
             {
                 Title = "Сохранить отчёт",
-                Filter = "Файл CSV, совместимый с Excel (*.csv)|*.csv|Все файлы (*.*)|*.*",
+                Filter = "Книга Excel (*.xlsx)|*.xlsx|Все файлы (*.*)|*.*",
                 AddExtension = true,
-                DefaultExt = ".csv",
+                DefaultExt = ".xlsx",
                 OverwritePrompt = true,
-                FileName = string.IsNullOrWhiteSpace(suggestedFileName) ? "otchet.csv" : suggestedFileName,
+                FileName = string.IsNullOrWhiteSpace(suggestedFileName) ? "otchet.xlsx" : suggestedFileName,
                 InitialDirectory = ResolveInitialDirectory(initialDirectory)
             };
 

@@ -59,8 +59,8 @@ namespace CenterCoffee.WPF
                 var unitOfWork = new JsonUnitOfWork(dataStore);
                 var warehouseService = new WarehouseService(unitOfWork);
                 var reportService = new WarehouseReportService(unitOfWork);
-                var reportExporter = new WarehouseReportCsvExporter();
-                var reportExportWriter = new TextReportExportWriter();
+                var reportExporter = new WarehouseReportTableExporter();
+                var reportExportWriter = new ExcelReportExportWriter();
                 var maintenanceService = new JsonDataMaintenanceService(dataStore, unitOfWork.Reload);
                 var dialogService = new DialogService();
 

@@ -76,7 +76,7 @@
                     <Button Padding="14,8"
                             Command="{Binding ExportCommand}"
                             AutomationProperties.AutomationId="ReportExport"
-                            Content="Экспорт в CSV"
+                            Content="Экспорт в Excel"
                             Style="{StaticResource AccentButton}" />
                 </StackPanel>
 

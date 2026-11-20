@@ -3,9 +3,9 @@ using System;
 namespace CenterCoffee.Application.Abstractions
 {
     /// <summary>
-    /// Представление складских отчётов в виде CSV-текста. Контракт вынесен отдельно
+    /// Представление складских отчётов в виде таблицы. Контракт вынесен отдельно
     /// от экрана, чтобы формат выгрузки не расползался по моделям представления.
-    /// Сам по себе файл не пишет: запись выполняет <see cref="IReportExportWriter"/>.
+    /// Сам файл не пишет: запись выполняет <see cref="IReportExportWriter"/>.
     /// </summary>
     public interface IWarehouseReportExporter
     {
@@ -15,13 +15,13 @@ namespace CenterCoffee.Application.Abstractions
         /// <summary>Имя файла выгрузки без каталога.</summary>
         string GetSuggestedFileName(WarehouseReportKind kind, DateTime from, DateTime to);
 
-        string BuildStockReport(StockReport report);
+        ReportTable BuildStockReport(StockReport report);
 
-        string BuildTurnoverReport(TurnoverReport report);
+        ReportTable BuildTurnoverReport(TurnoverReport report);
 
-        string BuildDeficitReport(DeficitReport report);
+        ReportTable BuildDeficitReport(DeficitReport report);
 
-        string BuildMovementReport(MovementReport report);
+        ReportTable BuildMovementReport(MovementReport report);
     }
 
     /// <summary>
@@ -31,9 +31,8 @@ namespace CenterCoffee.Application.Abstractions
     public interface IReportExportWriter
     {
         /// <summary>
-        /// Записывает текстовый файл в кодировке UTF-8 с BOM, чтобы кириллица
-        /// корректно открывалась в Excel. Возвращает полный путь записанного файла.
+        /// Записывает оформленный файл отчёта. Возвращает полный путь записанного файла.
         /// </summary>
-        string WriteTextFile(string filePath, string content);
+        string Write(ReportTable table, string filePath);
     }
 }
