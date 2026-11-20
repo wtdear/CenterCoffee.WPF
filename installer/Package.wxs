@@ -33,6 +33,23 @@
     <!-- Приветствие, выбор папки, прогресс, завершение. -->
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+    <!-- Приложение собрано под .NET Framework 4.7.2: без него exe не стартует.
+         Установщик проверяет framework до установки и объясняет требование
+         по-русски вместо системной ошибки при запуске.
+         Release в NDP v4 Full: 4.7.2 = 461808, 4.8 = 528040. -->
+    <Property Id="NETFRAMEWORKRELEASE">
+      <RegistrySearch Id="NetFrameworkReleaseSearch"
+                      Root="HKLM"
+                      Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"
+                      Name="Release"
+                      Type="raw" />
+    </Property>
+
+    <!-- Значение REG_DWORD приходит с префиксом '#': MSI так помечает целое.
+         Поэтому сравниваем с числовым литералом в том же формате. -->
+    <Launch Condition="Installed OR (NETFRAMEWORKRELEASE AND NETFRAMEWORKRELEASE &gt;= &quot;#461808&quot;)"
+            Message="Для работы «Центр кофе» требуется .NET Framework 4.7.2 или новее. Установите его с сайта Microsoft и повторите установку." />
   </Package>
 
   <Fragment>
