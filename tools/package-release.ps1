@@ -1,11 +1,14 @@
 ﻿# Сборка релиза «Центр кофе»: приложение и установщик.
-# Использование: powershell -ExecutionPolicy Bypass -File tools\package-release.ps1 [-Version 0.1.0] [-Portable]
-#   -Version   версия продукта в MSI (по умолчанию 0.1.0)
-#   -Portable  дополнительно положить exe и dll в корень решения и создать ярлык
-#              на рабочем столе (запуск без установки)
+# Использование: powershell -ExecutionPolicy Bypass -File tools\package-release.ps1 [-Version 0.1.0] [-Portable] [-CertificateThumbprint <SHA1>]
+#   -Version               версия продукта в MSI (по умолчанию 0.1.0)
+#   -Portable              дополнительно положить exe и dll в корень решения и создать ярлык
+#                          на рабочем столе (запуск без установки)
+#   -CertificateThumbprint подписать MSI сертификатом из хранилища текущего пользователя
+#                          (создать сертификат: tools\new-signing-cert.ps1)
 param(
     [string]$Version = "0.1.0",
-    [switch]$Portable
+    [switch]$Portable,
+    [string]$CertificateThumbprint
 )
 
 $ErrorActionPreference = "Stop"
@@ -41,6 +44,39 @@ $release = Join-Path $root "release"
 New-Item -ItemType Directory -Force -Path $release | Out-Null
 $msi = Join-Path $release "CenterCoffee.Setup.msi"
 Copy-Item "$root\installer\bin\Release\CenterCoffee.Setup.msi" $msi -Force
+
+# Подпись выполняется ДО расчёта хеша: она меняет файл, и хеш из README должен
+# соответствовать уже подписанному установщику.
+if ($CertificateThumbprint) {
+    Write-Host "==> Подпись установщика..." -ForegroundColor Cyan
+
+    $signtool = @(
+        "$env:ProgramFiles\Windows Kits\10\bin\x64\signtool.exe"
+        "${env:ProgramFiles(x86)}\Windows Kits\10\bin\x64\signtool.exe"
+        "${env:ProgramFiles(x86)}\Microsoft SDKs\ClickOnce\SignTool\signtool.exe"
+    ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+
+    if (-not $signtool) {
+        throw "signtool не найден. Установите Windows SDK (компонент «Windows 10/11 SDK») или Visual Studio с ним."
+    }
+
+    # /tr + /td: метка времени. Без неё signtool verify считает подпись неполной.
+    & $signtool sign /sha1 $CertificateThumbprint /fd sha256 `
+        /tr http://timestamp.digicert.com /td sha256 $msi
+    if ($LASTEXITCODE -ne 0) {
+        throw "Подпись установщика завершилась с ошибкой. Проверьте, что сертификат есть в хранилище и доступен сервер меток времени."
+    }
+
+    $signature = Get-AuthenticodeSignature $msi
+    if ($signature.Status -ne "Valid") {
+        Write-Host "    Внимание: подпись проверяется только на машине, где сертификат" -ForegroundColor Yellow
+        Write-Host "    добавлен в «Доверенные корневые центры». Текущий статус: $($signature.Status)" -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "    Подпись: действительна, издатель $($signature.SignerCertificate.Subject)"
+    }
+}
+
 $hash = (Get-FileHash $msi -Algorithm SHA256).Hash
 Write-Host "    Установщик: release\CenterCoffee.Setup.msi (версия $Version)"
 Write-Host "    SHA-256:    $hash"
