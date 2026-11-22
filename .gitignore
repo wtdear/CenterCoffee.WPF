@@ -29,3 +29,12 @@ TestResults/
 
 # Копии запускаемого набора в корне (появляются с ключом -Portable)
 /CenterCoffee.WPF.exe.config
+
+# Приватные ключи подписи. Открытая часть сертификата (release/*.cer) в git
+# нужна, а ключ не должен попасть в репозиторий ни при каких условиях.
+*.pfx
+*.p12
+*.pvk
+*.key
+*.snk
+CenterCoffee.private*
