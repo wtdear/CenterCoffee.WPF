@@ -1,10 +1,10 @@
 ﻿# Сборка релиза «Центр кофе»: приложение и установщик.
-# Использование: powershell -ExecutionPolicy Bypass -File tools\package-release.ps1 [-Version 1.1.0] [-Portable]
-#   -Version   версия продукта в MSI (по умолчанию 1.1.0)
+# Использование: powershell -ExecutionPolicy Bypass -File tools\package-release.ps1 [-Version 0.1.0] [-Portable]
+#   -Version   версия продукта в MSI (по умолчанию 0.1.0)
 #   -Portable  дополнительно положить exe и dll в корень решения и создать ярлык
 #              на рабочем столе (запуск без установки)
 param(
-    [string]$Version = "1.1.0",
+    [string]$Version = "0.1.0",
     [switch]$Portable
 )
 
@@ -30,8 +30,10 @@ Write-Host "==> Сборка приложения (Release)..." -ForegroundColor
 if ($LASTEXITCODE -ne 0) { throw "Сборка приложения завершилась с ошибкой." }
 
 Write-Host "==> Сборка установщика..." -ForegroundColor Cyan
+# /t:Rebuild обязателен: смена -Version не считается изменением входных данных,
+# и без пересборки в release/ попадёт MSI от предыдущей версии.
 & $msbuild "$root\installer\CenterCoffee.Installer.wixproj" `
-    /p:Configuration=Release /p:Version=$Version /v:m /nologo
+    /t:Rebuild /p:Configuration=Release /p:Version=$Version /v:m /nologo
 if ($LASTEXITCODE -ne 0) { throw "Сборка установщика завершилась с ошибкой." }
 
 # Установщик хранится в репозитории: на него ведёт ссылка в README.
